@@ -1,4 +1,10 @@
-export type UserType = 'standard' | 'locked' | 'problem' | 'glitch_user';
+export type UserType = 
+'standard' | 
+'locked' | 
+'problem' | 
+'glitch_user' |
+'error' | 
+'visual';
 
 export interface UserCredentials {
     usernameKey: string
@@ -21,5 +27,13 @@ export const userMappings: Record<UserType, UserCredentials> = {
     glitch_user: {
         usernameKey: 'PERFORMANCE_GLITCH_USER',
         passwordKey: 'PASSWORD'
-}
+    },
+    error: {
+        usernameKey: 'ERROR_USER',
+        passwordKey: 'PASSWORD'
+    },
+    visual: {
+        usernameKey: 'VISUAL_USER',
+        passwordKey: 'PASSWORD'
+    }
 }

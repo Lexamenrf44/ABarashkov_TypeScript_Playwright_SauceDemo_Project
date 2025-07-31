@@ -1,17 +1,10 @@
-import { test as base } from './BaseTest';
+import { test as base } from './AddCookies';
 
 export const test = base.extend<{
   cookieLogin: void;
 }>({
-  cookieLogin: async ({ page }, use) => {
-    await page.context().addCookies([
-      {
-        name: 'session-username',
-        value: 'standard_user',
-        domain: 'www.saucedemo.com',
-        path: '/',
-      },
-    ]);
+  cookieLogin: async ({ page, addSessionCookies }, use) => {
+    await addSessionCookies;
     await page.goto(`${process.env.SAUCE_DEMO_BASE_URL}/inventory.html`);
     await use(undefined);
   },

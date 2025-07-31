@@ -6,12 +6,12 @@ export class PageHolder {
 
     }
 
-    @step(`Assert {loader} is visible`)
+    @step(`Assert {locator} visible`)
     async assertElementVisible(locator: Locator): Promise<void> {
         await expect(locator).toBeVisible();
     }
 
-    @step(`Click on {locator} element`)
+    @step(`Click on {locator} locator`)
     async clickSelector(locator: Locator): Promise<void> {
         await this.assertElementVisible(locator);
         await locator.click();
@@ -29,7 +29,7 @@ export abstract class BasePage extends PageHolder {
         await expect(this.page).toHaveURL(`${baseHost}${endpoint}`);
     }
 
-    @step(`Assert locator {locator} has {text} string text`)
+    @step(`Assert {locator} has {text} text`)
     async assertElementHasText(locator: Locator, text: string): Promise<void> {
         await expect(locator).toHaveText(text);
     }

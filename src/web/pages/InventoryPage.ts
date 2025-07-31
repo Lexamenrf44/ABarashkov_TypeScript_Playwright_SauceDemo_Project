@@ -6,7 +6,7 @@ export class InventoryPage extends BasePage {
 
   private readonly inventoryList = this.page.locator('.inventory_list');
 
-  @step('Assert that the inventory page is loaded')
+  @step('Assert inventory page loaded')
   async waitUntilInventoryPageLoaded(): Promise<InventoryPage> {
     await this.assertPageUrl(`${process.env.SAUCE_DEMO_BASE_URL}`, '/inventory.html');
     await this.assertElementVisible(this.inventoryList);
