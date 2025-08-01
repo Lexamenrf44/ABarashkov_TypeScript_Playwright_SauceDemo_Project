@@ -28,7 +28,7 @@ export class LoginPage extends BasePage {
 
     @step('Assert unauthorized access alert message displayed')
     async assertUnauthorizedAccessAlertMessage(): Promise<void> {
-        await this.assertPageUrl(`${process.env.SAUCE_DEMO_BASE_URL}`);
+        await this.assertLoginPageLoaded();
         await this.assertElementVisible(this.errorContainer);
         await this.assertElementHasText(this.errorContainer, LoginAlerts.UNATHORIZED_ALERT);
     }
