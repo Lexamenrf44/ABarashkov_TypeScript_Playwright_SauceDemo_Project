@@ -1,5 +1,4 @@
 import { test } from '../fixtures/CookieLogin';
-import { InventoryPage } from '../web/pages';
 
 test.describe('Standard user cookie login tests', () => {
   test.describe('Default user cookie login tests', () => {
