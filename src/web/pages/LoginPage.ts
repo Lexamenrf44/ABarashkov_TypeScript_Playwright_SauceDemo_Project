@@ -12,7 +12,7 @@ export class LoginPage extends BasePage {
 
     @step('Assert login page loaded')
     async assertLoginPageLoaded(): Promise<void> {
-        await this.assertPageUrl(`${process.env.SAUCE_DEMO_BASE_URL}`);
+        await this.assertPageUrl(`${process.env.SAUCE_DEMO_BASE_URL}`, '/');
     }
 
     @step('Manual authentication')
@@ -35,6 +35,7 @@ export class LoginPage extends BasePage {
 
     @step('Assert invalid username and password alert message displayed when {usernameInput} and {passwordInput} are filled with invalid data')
     async assertInvalidUsernameAndPasswordAlertMessage(): Promise<void> {
+        await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
         await this.assertLoginPageLoaded();
         await this.assertElementVisible(this.usernameInput);
         await this.fillSelector(this.usernameInput, 'invalid_user');
@@ -44,6 +45,36 @@ export class LoginPage extends BasePage {
         await this.clickSelector(this.loginButton);
         await this.assertElementVisible(this.errorContainer);
         await this.assertElementHasText(this.errorContainer, LoginAlerts.INVALID_USERNAME_AND_PASSWORD_ALERT);
+    }
+
+    @step('Assert empty username alert message displayed when {usernameInput} is empty')
+    async assertEmptyUsernameAlertMessage(): Promise<void> {
+        await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
+        await this.assertLoginPageLoaded();
+        await this.clickSelector(this.loginButton);
+        await this.assertElementVisible(this.errorContainer);
+        await this.assertElementHasText(this.errorContainer, LoginAlerts.EMPTY_USERNAME_ALERT);
+    }
+
+    @step('Assert empty password alert message displayed when {passwordInput} is empty')
+    async assertEmptyPasswordAlertMessage(): Promise<void> {
+        await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
+        await this.assertLoginPageLoaded();
+        await this.fillSelector(this.usernameInput, `${process.env.STANDARD_USER}`);
+        await this.clickSelector(this.loginButton);
+        await this.assertElementVisible(this.errorContainer);
+        await this.assertElementHasText(this.errorContainer, LoginAlerts.EMPTY_PASSWORD_ALERT);
+    }
+
+    @step('Assert locked out user alert message displayed when {usernameInput} is filled with locked out user')
+    async assertLockedOutUserAlertMessage(): Promise<void> {
+        await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
+        await this.assertLoginPageLoaded();
+        await this.fillSelector(this.usernameInput, `${process.env.LOCKED_OUT_USER}`);
+        await this.fillSelector(this.passwordInput, `${process.env.PASSWORD}`);
+        await this.clickSelector(this.loginButton);
+        await this.assertElementVisible(this.errorContainer);
+        await this.assertElementHasText(this.errorContainer, LoginAlerts.LOCKED_OUT_USER_ALERT);
     }
 
 }

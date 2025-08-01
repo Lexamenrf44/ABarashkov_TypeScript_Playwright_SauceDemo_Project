@@ -36,7 +36,7 @@ export abstract class Component extends PageHolder {
 export abstract class BasePage extends PageHolder {
 
     @step('Assert page {baseHost} has {endpoint} endpoint')
-    async assertPageUrl(baseHost: string, endpoint?: string): Promise<void> {
+    async assertPageUrl(baseHost: string, endpoint: string): Promise<void> {
         await expect(this.page).toHaveURL(`${baseHost}${endpoint}`);
         await this.page.waitForLoadState('networkidle');
     }
