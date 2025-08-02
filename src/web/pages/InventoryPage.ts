@@ -20,7 +20,6 @@ export class InventoryPage extends BasePage {
 
   @step('Assert logout after cookies cleared and page reloaded')
   async assertUserLoggedOutAfterCookiesCleared(): Promise<LoginPage> {
-    await this.waitUntilInventoryPageLoaded();
     await this.clearBrowserCookies();
     await this.reloadPage();
 
@@ -29,7 +28,6 @@ export class InventoryPage extends BasePage {
 
   @step('Assert manual logout via navbar component on logout button')
   async assertUserLoggedOutAfterManualLogout(): Promise<LoginPage> {
-    await this.waitUntilInventoryPageLoaded();
     await this.navbar.openNavbarMenu();
     await this.navbar.clickLogoutButton();
 
