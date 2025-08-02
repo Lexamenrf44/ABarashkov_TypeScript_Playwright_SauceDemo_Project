@@ -1,14 +1,9 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { step } from "../../utils/decorators.utils";
 
-export class PageHolder {
+export abstract class PageHolder {
     constructor(protected page: Page) {
 
-    }
-
-    @step('Navigate to {url}')
-    async navigateTo(url: string): Promise<void> {
-        await this.page.goto(url);
     }
 
     @step(`Assert {locator} visible`)
@@ -16,16 +11,20 @@ export class PageHolder {
         await expect(locator).toBeVisible();
     }
 
-    @step(`Click on {locator} locator`)
+    @step(`Assert {locator} is not visible`)
+    async assertElementIsNotVisible(locator: Locator): Promise<void> {
+        await expect(locator).not.toBeVisible();
+    }
+
+    @step(`Should click on {locator} locator`)
     async clickSelector(locator: Locator): Promise<void> {
         await this.assertElementVisible(locator);
         await locator.click();
     }
 
-    @step(`Fill {locator} field with {text} text`)
-    async fillSelector(locator: Locator, text: string): Promise<void> {
-        await this.assertElementVisible(locator);
-        await locator.fill(text);
+    @step('Should reload page')
+    async reloadPage(): Promise<void> {
+        await this.page.reload();
     }
 }
 
@@ -34,6 +33,22 @@ export abstract class Component extends PageHolder {
 }
 
 export abstract class BasePage extends PageHolder {
+
+    @step('Should clear all browser cookies')
+    async clearBrowserCookies(): Promise<void> {
+        await this.page.context().clearCookies();
+    }
+
+    @step('Should navigate to {url}')
+    async navigateTo(url: string): Promise<void> {
+        await this.page.goto(url);
+    }
+
+    @step(`Should fill {locator} field with {text} text`)
+    async fillSelector(locator: Locator, text: string): Promise<void> {
+        await this.assertElementVisible(locator);
+        await locator.fill(text);
+    }
 
     @step('Assert page {baseHost} has {endpoint} endpoint')
     async assertPageUrl(baseHost: string, endpoint: string): Promise<void> {

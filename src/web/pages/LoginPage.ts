@@ -1,3 +1,4 @@
+import { Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { step } from "../../utils/decorators.utils";
 import { LoginAlerts } from '../../data/loginAlerts';
@@ -5,20 +6,24 @@ import { InventoryPage } from "./InventoryPage";
 
 export class LoginPage extends BasePage {
 
-    private readonly errorContainer = this.page.locator('.error-message-container');
-    private readonly usernameInput = this.page.locator('[data-test="username"]');
-    private readonly passwordInput = this.page.locator('[data-test="password"]');
-    private readonly loginButton = this.page.locator('[data-test="login-button"]');
+    private readonly loginWindow: Locator = this.page.locator('.login_wrapper-inner');
+    private readonly errorContainer: Locator = this.page.locator('.error-message-container');
+    private readonly usernameInput: Locator = this.page.locator('[data-test="username"]');
+    private readonly passwordInput: Locator = this.page.locator('[data-test="password"]');
+    private readonly loginButton: Locator = this.page.locator('[data-test="login-button"]');
 
     @step('Assert login page loaded')
-    async assertLoginPageLoaded(): Promise<void> {
+    async waitUntilLoginPageLoaded(): Promise<LoginPage> {
         await this.assertPageUrl(`${process.env.SAUCE_DEMO_BASE_URL}`, '/');
+        await this.assertElementVisible(this.loginWindow);
+
+        return this;
     }
 
     @step('Manual authentication')
     async manualAuthentication(): Promise<InventoryPage> {
         await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.fillSelector(this.usernameInput, `${process.env.STANDARD_USER}`);
         await this.fillSelector(this.passwordInput, `${process.env.PASSWORD}`);
         await this.clickSelector(this.loginButton);
@@ -28,7 +33,7 @@ export class LoginPage extends BasePage {
 
     @step('Assert unauthorized access alert message displayed')
     async assertUnauthorizedAccessAlertMessage(): Promise<void> {
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.assertElementVisible(this.errorContainer);
         await this.assertElementHasText(this.errorContainer, LoginAlerts.UNATHORIZED_ALERT);
     }
@@ -36,7 +41,7 @@ export class LoginPage extends BasePage {
     @step('Assert invalid username and password alert message displayed when {usernameInput} and {passwordInput} are filled with invalid data')
     async assertInvalidUsernameAndPasswordAlertMessage(): Promise<void> {
         await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.assertElementVisible(this.usernameInput);
         await this.fillSelector(this.usernameInput, 'invalid_user');
         await this.assertElementVisible(this.passwordInput);
@@ -50,7 +55,7 @@ export class LoginPage extends BasePage {
     @step('Assert empty username alert message displayed when {usernameInput} is empty')
     async assertEmptyUsernameAlertMessage(): Promise<void> {
         await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.clickSelector(this.loginButton);
         await this.assertElementVisible(this.errorContainer);
         await this.assertElementHasText(this.errorContainer, LoginAlerts.EMPTY_USERNAME_ALERT);
@@ -59,7 +64,7 @@ export class LoginPage extends BasePage {
     @step('Assert empty password alert message displayed when {passwordInput} is empty')
     async assertEmptyPasswordAlertMessage(): Promise<void> {
         await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.fillSelector(this.usernameInput, `${process.env.STANDARD_USER}`);
         await this.clickSelector(this.loginButton);
         await this.assertElementVisible(this.errorContainer);
@@ -69,7 +74,7 @@ export class LoginPage extends BasePage {
     @step('Assert locked out user alert message displayed when {usernameInput} is filled with locked out user')
     async assertLockedOutUserAlertMessage(): Promise<void> {
         await this.navigateTo(`${process.env.SAUCE_DEMO_BASE_URL}`);
-        await this.assertLoginPageLoaded();
+        await this.waitUntilLoginPageLoaded();
         await this.fillSelector(this.usernameInput, `${process.env.LOCKED_OUT_USER}`);
         await this.fillSelector(this.passwordInput, `${process.env.PASSWORD}`);
         await this.clickSelector(this.loginButton);
