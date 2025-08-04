@@ -1,16 +1,17 @@
 import { Component } from '../pages/BasePage';
 import { step } from '../../utils/decorators.utils';
+import { Locator } from '@playwright/test';
 
 export class NavbarComponent extends Component {
 
-  private readonly navbarBurgerMenuButton = this.page.locator('.bm-burger-button');
+  private readonly navbarBurgerMenuButton: Locator = this.page.locator('.bm-burger-button');
 
-  private readonly navbarLeftSidebarSliderMenu = this.page.locator('.bm-menu-wrap');
-  private readonly navbarCloseSidebarButton = this.page.locator('.bm-cross-button');
-  private readonly navbarAllItemsButton = this.page.locator('[data-test="inventory-sidebar-link"]');
-  private readonly navbarAboutButton = this.page.locator('[data-test="about-sidebar-link"]');
-  private readonly navbarLogoutButton = this.page.locator('[data-test="logout-sidebar-link"]');
-  private readonly navbarResetAppStateButton = this.page.locator('[id="reset_sidebar_link"]');
+  private readonly navbarLeftSidebarSliderMenu: Locator = this.page.locator('.bm-menu-wrap');
+  private readonly navbarCloseSidebarButton: Locator = this.page.locator('.bm-cross-button');
+  private readonly navbarAllItemsButton: Locator = this.page.locator('[data-test="inventory-sidebar-link"]');
+  private readonly navbarAboutButton: Locator = this.page.locator('[data-test="about-sidebar-link"]');
+  private readonly navbarLogoutButton: Locator = this.page.locator('[data-test="logout-sidebar-link"]');
+  private readonly navbarResetAppStateButton: Locator = this.page.locator('[id="reset_sidebar_link"]');
 
   @step('Wait for navbar to be visible')
   async waitForNavbarVisible(): Promise<NavbarComponent> {
