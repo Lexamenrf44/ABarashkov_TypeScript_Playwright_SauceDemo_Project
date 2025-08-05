@@ -64,7 +64,7 @@ export abstract class BasePage extends PageHolder {
     }
 
     @step('Assert inventory items are sorted by "{optionFilter.filterOption}"')
-    async assertItemsSortedByOption(items: CartModel[], optionFilter: FilterOption): Promise<void> {
+    async compareWithSortedInventoryItems(items: CartModel[], optionFilter: FilterOption): Promise<void> {
         expect(items).toEqual([...items].sort(optionFilter.comparator));
     }
 }

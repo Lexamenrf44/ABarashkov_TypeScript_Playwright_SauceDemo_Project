@@ -49,7 +49,7 @@ export class InventoryPage extends BasePage {
   @step('Assert that filtered by "{optionFilter.filterOption}" inventory items are equal to sorted items by "{optionFilter.filterOption}" from cartModel')
   async assertByOption(optionFilter: FilterOption): Promise<InventoryPage> {
     const items = await this.getItemList();
-    await this.assertItemsSortedByOption(items, optionFilter);
+    await this.compareWithSortedInventoryItems(items, optionFilter);
 
     return this;
   }
