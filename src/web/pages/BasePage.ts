@@ -1,5 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { step } from "../../utils/decorators.utils";
+import { CartModel } from "../../model/cartModel";
+import { FilterOption } from "../../data/filterOptions";
 
 export abstract class PageHolder {
     constructor(protected page: Page) {
@@ -59,5 +61,10 @@ export abstract class BasePage extends PageHolder {
     @step(`Assert {locator} has {text} text`)
     async assertElementHasText(locator: Locator, text: string): Promise<void> {
         await expect(locator).toHaveText(text);
+    }
+
+    @step('Assert inventory items are sorted by "{optionFilter.filterOption}"')
+    async assertItemsSortedByOption(items: CartModel[], optionFilter: FilterOption): Promise<void> {
+        expect(items).toEqual([...items].sort(optionFilter.comparator));
     }
 }

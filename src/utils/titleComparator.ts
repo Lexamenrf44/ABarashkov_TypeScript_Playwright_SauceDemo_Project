@@ -1,7 +1,7 @@
 import { CartModel } from '../model/cartModel';
 
 export function titleComparator(a: CartModel, b: CartModel): number {
-    return a.title.localeCompare(b.title);
+    return a.getTitle().localeCompare(b.getTitle());
 }
 
 export function titleComparatorReversed(a: CartModel, b: CartModel): number {

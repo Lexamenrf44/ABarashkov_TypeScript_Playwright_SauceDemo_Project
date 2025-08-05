@@ -1,27 +1,34 @@
 import { Locator } from '@playwright/test';
 
 export class CartModel {
-    title: string;
-    description: string;
-    price: number;
+    private title: string;
+    private description: string;
+    private price: number;
 
-    constructor(element: Locator) {
-        this.title = '';
-        this.description = '';
-        this.price = 0;
+    constructor(title: string, description: string, price: number) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+    }
+
+    getTitle(): string {
+        return this.title;
+    }
+
+    getDescription(): string {
+        return this.description;
+    }
+
+    getPrice(): number {
+        return this.price;
     }
 
     static async fromLocator(element: Locator): Promise<CartModel> {
-        const model = new CartModel(element);
-        
-        model.title = await element.locator("[data-test='inventory-item-name']").textContent() ?? '';
-        
-        model.description = await element.locator("[data-test='inventory-item-desc']").textContent() ?? '';
-        
+        const title = await element.locator("[data-test='inventory-item-name']").textContent() ?? '';
+        const description = await element.locator("[data-test='inventory-item-desc']").textContent() ?? '';
         const priceText = await element.locator("[data-test='inventory-item-price']").textContent() ?? '0';
-        
-        model.price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-        
-        return model;
+        const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+
+        return new CartModel(title, description, price);
     }
 }

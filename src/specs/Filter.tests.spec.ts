@@ -1,28 +1,13 @@
 import { test } from '../fixtures/CookieLogin';
 import { filterOptions } from '../data/filterOptions';
 
-test.describe('Filter tests', () => {
-  test('Should filter price high to low', async ({ cookieLogin, inventoryPage }) => {
-    const option = filterOptions.find(o => o.filterOption === 'Price (high to low)');
-    await inventoryPage.filterByOption(option!);
-    await inventoryPage.assertByOption(option!);
-  });
-
-  test('Should filter price low to high', async ({ cookieLogin, inventoryPage }) => {
-    const option = filterOptions.find(o => o.filterOption === 'Price (low to high)');
-    await inventoryPage.filterByOption(option!);
-    await inventoryPage.assertByOption(option!);
-  });
-
-  test('Should filter by name A to Z', async ({ cookieLogin, inventoryPage }) => {
-    const option = filterOptions.find(o => o.filterOption === 'Name (A to Z)');
-    await inventoryPage.filterByOption(option!);
-    await inventoryPage.assertByOption(option!);
-  });
-
-  test('Should filter by name Z to A', async ({ cookieLogin, inventoryPage }) => {
-    const option = filterOptions.find(o => o.filterOption === 'Name (Z to A)');
-    await inventoryPage.filterByOption(option!);
-    await inventoryPage.assertByOption(option!);
-  });
+Object.entries(filterOptions).forEach(([key, val]) => {
+    test.describe(`Filter option: ${key}`, () => {
+        test(`Should filter inventory list by the "${val.filterOption}" filter option`, async ({ page, cookieLogin, inventoryPage }) => {
+            await inventoryPage.waitUntilInventoryPageLoaded();
+            await inventoryPage.filterByOption(val.filterOption);
+            await page.waitForTimeout(3000); // for visual debugging
+            await inventoryPage.assertByOption(val);
+        });
+    });
 });

@@ -10,23 +10,20 @@ export function step(stepName?: string) {
                 ?.map(p => p.trim().replace(/:.*/, '')) || [];
             
             const propertyNames = Object.getOwnPropertyNames(this);
-            
+
             const formattedName = (stepName || String(context.name))
-                .replace(/\{(\w+)\}/g, (_, paramName) => {
+                .replace(/\{([\w.]+)\}/g, (_, path) => {
+                    const [paramName, ...props] = path.split('.');
                     const paramIndex = paramNames.indexOf(paramName);
-                    
-                    if (paramIndex >= 0 && paramIndex < args.length) {
-                        const arg = args[paramIndex];
-                        
-                        if (arg?.constructor?.name === 'Locator') {
-                            const foundProp = propertyNames.find(prop => 
-                                this[prop] === arg
-                            );
-                            return foundProp || paramName;
-                        }
-                        return String(arg);
+                    let value = paramIndex >= 0 && paramIndex < args.length ? args[paramIndex] : undefined;
+                    for (const prop of props) {
+                        value = value?.[prop];
                     }
-                    return paramName;
+                    if (value?.constructor?.name === 'Locator') {
+                        const foundProp = propertyNames.find(prop => this[prop] === value);
+                        return foundProp || paramName;
+                    }
+                    return value !== undefined ? String(value) : path;
                 });
 
             return test.step(formattedName, async () => {

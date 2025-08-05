@@ -1,4 +1,4 @@
-import { expect, Locator } from '@playwright/test';
+import { Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { step } from '../../utils/decorators.utils';
 import { LoginPage } from './LoginPage';
@@ -13,6 +13,7 @@ export class InventoryPage extends BasePage {
   private readonly filterComponent = new FilterComponent(this.page);
 
   private readonly inventoryList: Locator = this.page.locator('.inventory_list');
+  private readonly inventoryItems: Locator = this.inventoryList.locator('.inventory_item');
 
   @step('Assert inventory page loaded')
   async waitUntilInventoryPageLoaded(): Promise<InventoryPage> {
@@ -38,25 +39,25 @@ export class InventoryPage extends BasePage {
     return new LoginPage(this.page).waitUntilLoginPageLoaded();
   }
 
-  @step('Filter by option {optionFilter.filterOption}')
-  async filterByOption(optionFilter: FilterOption): Promise<InventoryPage> {
+  @step('Filter by the "{optionFilter}" filter option')
+  async filterByOption(optionFilter: string): Promise<InventoryPage> {
     await this.filterComponent.filterByOption(optionFilter);
 
     return this;
   }
 
-  @step('Assert that filtered by {optionFilter.filterOption} inventory items are equal to sortedItems by {optionFilter.filterOption}')
-async assertByOption(optionFilter: FilterOption): Promise<InventoryPage> {
-    const filteredInventoryItems = await this.getItemList();
-    const sortedItems = [...filteredInventoryItems].sort(optionFilter.comparator);
-
-    expect(filteredInventoryItems).toEqual(sortedItems);
+  @step('Assert that filtered by "{optionFilter.filterOption}" inventory items are equal to sorted items by "{optionFilter.filterOption}" from cartModel')
+  async assertByOption(optionFilter: FilterOption): Promise<InventoryPage> {
+    const items = await this.getItemList();
+    await this.assertItemsSortedByOption(items, optionFilter);
 
     return this;
-}
-@step('Get list of inventory items')
-async getItemList(): Promise<CartModel[]> {
-    const itemLocators = await this.inventoryList.locator('.cart_item').all();
-    return Promise.all(itemLocators.map(locator => CartModel.fromLocator(locator)));
-}
+  }
+
+  @step('Get list of inventory items')
+  async getItemList(): Promise<CartModel[]> {
+    return Promise.all(
+      (await this.inventoryItems.all()).map(locator => CartModel.fromLocator(locator))
+    );
+  }
 }

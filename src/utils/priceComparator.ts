@@ -1,9 +1,9 @@
 import { CartModel } from '../model/cartModel';
 
 export function priceComparator(a: CartModel, b: CartModel): number {
-    if (a.price > b.price) {
+    if (a.getPrice() > b.getPrice()) {
         return 1;
-    } else if (a.price < b.price) {
+    } else if (a.getPrice() < b.getPrice()) {
         return -1;
     } else {
         return 0;
