@@ -1,4 +1,5 @@
 export enum LoginAlerts {
+  
   EMPTY_USERNAME_ALERT = "Epic sadface: Username is required",
   EMPTY_PASSWORD_ALERT = "Epic sadface: Password is required",
   INVALID_USERNAME_AND_PASSWORD_ALERT = "Epic sadface: Username and password do not match any user in this service",
